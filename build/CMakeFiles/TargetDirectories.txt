@@ -1,0 +1,8 @@
+/home/j0o0ll/Projects/Cpp/JotaEngine/build/CMakeFiles/edit_cache.dir
+/home/j0o0ll/Projects/Cpp/JotaEngine/build/CMakeFiles/rebuild_cache.dir
+/home/j0o0ll/Projects/Cpp/JotaEngine/build/external/imgui/CMakeFiles/imgui.dir
+/home/j0o0ll/Projects/Cpp/JotaEngine/build/external/imgui/CMakeFiles/edit_cache.dir
+/home/j0o0ll/Projects/Cpp/JotaEngine/build/external/imgui/CMakeFiles/rebuild_cache.dir
+/home/j0o0ll/Projects/Cpp/JotaEngine/build/src/CMakeFiles/JotaEngine.dir
+/home/j0o0ll/Projects/Cpp/JotaEngine/build/src/CMakeFiles/edit_cache.dir
+/home/j0o0ll/Projects/Cpp/JotaEngine/build/src/CMakeFiles/rebuild_cache.dir
