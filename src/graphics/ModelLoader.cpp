@@ -38,6 +38,18 @@ static Mesh* ProcessMesh(aiMesh* mesh) {
             v.TexCoords = glm::vec2(0.0f);
         }
 
+        if (mesh->mTangents) {
+            v.Tangent = glm::vec3(mesh->mTangents[i].x,
+                                    mesh->mTangents[i].y,
+                                    mesh->mTangents[i].z);
+        }
+        
+        if (mesh->mBitangents) {
+            v.Bitangent = glm::vec3(mesh->mBitangents[i].x,
+                                        mesh->mBitangents[i].y,
+                                        mesh->mBitangents[i].z);
+        }
+
         vertices.push_back(v);
     }
 
@@ -58,7 +70,8 @@ Model* ModelLoader::LoadModel(const std::string& path) {
     const aiScene* scene = importer.ReadFile(path,
         aiProcess_Triangulate |
         //aiProcess_FlipUVs |
-        aiProcess_GenNormals
+        aiProcess_GenSmoothNormals |
+        aiProcess_CalcTangentSpace
     );
 
     if (!scene || !scene->mRootNode || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) {

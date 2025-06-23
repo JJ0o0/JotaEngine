@@ -3,11 +3,18 @@
 #include "graphics/Shader.h"
 #include "graphics/Texture.h"
 
+struct Material {
+    Texture* diffuse;
+    Texture* specular;
+    Texture* normal;
+    float shininess;
+};
+
 class Entity {
 public:
     Entity(Model* mesh, Shader* shader);
 
-    void SetTexture(Texture* texture);
+    void SetMaterial(Material mat);
     void Draw();
 
     void ResetTransform();
@@ -27,7 +34,8 @@ public:
 private:
     Model* model;
     Shader* shader;
-    Texture* texture;
+
+    Material material;
 
     glm::mat4 model_matrix;
     glm::vec3 position = glm::vec3(0.0);

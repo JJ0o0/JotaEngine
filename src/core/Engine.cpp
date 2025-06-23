@@ -25,22 +25,32 @@ Engine::Engine(int width, int height, const char* title) :
     
     ResourceManager::LoadShader("default", "shaders/default.vert", "shaders/default.frag");
     ResourceManager::LoadShader("light", "shaders/light.vert", "shaders/light.frag");
-    ResourceManager::LoadTexture("crateTexture", "assets/images/crate.png");
+    
     ResourceManager::LoadModel("crate", "assets/models/crate.glb");
+    ResourceManager::LoadModel("rivet", "assets/models/rivet.obj");
+
+    ResourceManager::LoadTexture("rivet_diffuse", "assets/images/rivet_diffuse.png");
+    ResourceManager::LoadTexture("rivet_specular", "assets/images/rivet_specular.png");
+    ResourceManager::LoadTexture("rivet_normal", "assets/images/rivet_normal.png");
 
     shader = ResourceManager::GetShader("default");
     lightShader = ResourceManager::GetShader("light");  
 
-    Model* crate = ResourceManager::GetModel("crate");
+    Model* rivet = ResourceManager::GetModel("rivet");
     Model* light = ResourceManager::GetModel("crate");
 
-    Entity* entity = new Entity(crate, shader);
-    entity->SetTexture(ResourceManager::GetTexture("crateTexture"));
+    Material rivetMaterial;
+    rivetMaterial.diffuse = ResourceManager::GetTexture("rivet_diffuse");
+    rivetMaterial.specular = ResourceManager::GetTexture("rivet_specular");
+    rivetMaterial.normal = ResourceManager::GetTexture("rivet_normal");
+    rivetMaterial.shininess = 32.0f;
 
-    Entity* lightEntity = new Entity(crate, lightShader);
-    lightEntity->SetTexture(nullptr);
+    Entity* rivetEntity = new Entity(rivet, shader);
+    rivetEntity->SetMaterial(rivetMaterial);
 
-    entities.push_back(entity);
+    Entity* lightEntity = new Entity(light, lightShader);
+
+    entities.push_back(rivetEntity);
     entities.push_back(lightEntity);
 }
 
@@ -100,12 +110,11 @@ void Engine::Render() {
     shader->Use();
     shader->SetUniformMat4("view", view);
     shader->SetUniformMat4("projection", projection);
-    shader->SetUniformVec3("color", glm::vec3(1.0f, 0.5f, 0.31f));
     shader->SetUniformVec3("viewPos", mainCamera->Position);
     shader->SetUniformVec3("lightPos", entities[1]->GetPosition());
     shader->SetUniformVec3("lightColor", glm::vec3(1.0f));
 
-    entities[0]->SetScale(glm::vec3(0.05f));
+    entities[0]->SetScale(glm::vec3(0.1f));
     entities[0]->Draw();
 }
 

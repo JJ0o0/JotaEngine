@@ -2,10 +2,12 @@
 #include "glm/ext/matrix_transform.hpp"
 
 Entity::Entity(Model* m, Shader* s) 
-: model(m), shader(s), model_matrix(glm::mat4(1.0f)) {}
+: model(m), shader(s), model_matrix(glm::mat4(1.0f)) {
+    material = {nullptr, nullptr, nullptr, 32.0f};
+}
 
-void Entity::SetTexture(Texture* t) { 
-    texture = t; 
+void Entity::SetMaterial(Material mat) { 
+    material = mat;
 }
 
 void Entity::ResetTransform() {
@@ -35,30 +37,43 @@ glm::mat4 Entity::GetModelMatrix() const {
 }
 
 void Entity::Draw() {
-    if (!model) {
-        return;
-    }
-
-    if (!shader) {
-        return;
-    }
+    if (!model || !shader) return;
 
     shader->Use();
     shader->SetUniformMat4("model", model_matrix);
 
-    if (texture) {
-        shader->SetUniform1i("useTexture", 1);
-        shader->SetUniformVec3("color", glm::vec3(1.0f));
-        shader->SetUniform1i("texture0", 0);
-        texture->Bind(0);
-    } else {
-        shader->SetUniform1i("useTexture", 0);
-        shader->SetUniformVec3("color", glm::vec3(1.0f));
+    bool hasTextures = (material.diffuse && material.specular);
+    bool hasNormalMap = material.normal;
+
+    shader->SetUniform1i("useTexture", hasTextures);
+    shader->SetUniform1i("useNormalMap", hasNormalMap);
+    shader->SetUniformVec3("color", glm::vec3(1.0f));
+    shader->SetUniform1f("material.shininess", material.shininess);
+
+    if (hasTextures) {
+        shader->SetUniform1i("material.diffuse", 0);
+        shader->SetUniform1i("material.specular", 1);
+        
+        material.diffuse->Bind(0);
+        material.specular->Bind(1);
+    }
+
+    if (hasNormalMap) {
+        shader->SetUniform1i("material.normal", 2);
+
+        material.normal->Bind(2);
     }
 
     model->Draw(shader);
 
-    if (texture) texture->Unbind();
+    if (hasTextures) {
+        material.diffuse->Unbind();
+        material.specular->Unbind();
+    }
+
+    if (hasNormalMap) {
+        material.normal->Unbind();
+    }
 }
 
 void Entity::UpdateModelMatrix() {
