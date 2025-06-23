@@ -86,3 +86,6 @@ cmake --build . --config Release
 cmake .. -G "MinGW Makefiles"
 mingw32-make
 ```
+## Licença
+
+Este projeto está licenciado sob a licença [MIT](LICENSE).
