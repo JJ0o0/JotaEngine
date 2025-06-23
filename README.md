@@ -11,6 +11,7 @@ Uma engine de jogo 3D simples e poderosa, construída com C++ e a API gráfica O
 <p align="center">
   <img src="demo.gif" alt="Preview da JotaEngine" />
 </p>
+
 ## Funcionalidades
 
 * **Renderização 3D:** Utiliza o poder do OpenGL moderno para renderizar cenas tridimensionais.
