@@ -1,0 +1,18 @@
+# Arquivos de Build
+/build/
+/.cache/
+
+# Arquivos temporários
+*.o
+*.exe
+*.log
+*.tmp
+
+# Editor
+*.swp
+.vscode/
+.idea/
+
+# Sistema e OS
+.DS_Store
+Thumbs.db
