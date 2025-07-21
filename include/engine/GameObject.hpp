@@ -5,6 +5,7 @@
 #include "core/Shader.hpp"
 #include "core/Mesh.hpp"
 #include "core/Texture.hpp"
+#include "engine/Transform.hpp"
 
 class GameObject {
 public:
@@ -12,6 +13,8 @@ public:
   ~GameObject();
 
   void Render(Shader &shader) const;
+
+  Transform transform;
 
   void SetMesh(std::shared_ptr<Mesh> mesh);
   void SetTexture(std::shared_ptr<Texture> texture);

@@ -9,6 +9,7 @@ void GameObject::Render(Shader &shader) const {
     return;
 
   shader.Bind();
+  shader.SetMatrix4("model", transform.GetModelMatrix());
 
   texture->Bind();
   mesh->Render();

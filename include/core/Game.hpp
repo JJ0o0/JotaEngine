@@ -15,9 +15,6 @@ public:
   void Quit();
 
 private:
-  std::shared_ptr<Mesh> square_mesh;
-  std::shared_ptr<Texture> brick_texture;
-
-  Shader *default_shader;
-  GameObject *square_obj;
+  std::shared_ptr<Shader> default_shader;
+  std::shared_ptr<GameObject> square_obj;
 };
