@@ -21,6 +21,13 @@ cmake ..
 make
 ./JotaEngine
 ```
+Ou:
+
+'''bash
+git clone https://github.com/JJ0o0/JotaEngine.git
+cd JotaEngine
+./run.sh
+'''
 
 ## Controles
 
