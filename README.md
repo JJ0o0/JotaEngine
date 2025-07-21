@@ -23,11 +23,11 @@ make
 ```
 Ou:
 
-'''bash
+```bash
 git clone https://github.com/JJ0o0/JotaEngine.git
 cd JotaEngine
 ./run.sh
-'''
+```
 
 ## Controles
 
