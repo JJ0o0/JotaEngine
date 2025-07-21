@@ -3,6 +3,7 @@
 #include "core/Window.hpp"
 #include "core/Shader.hpp"
 #include "core/Mesh.hpp"
+#include "core/Texture.hpp"
 
 class Game {
 public:
@@ -17,5 +18,6 @@ public:
 
 private:
   Shader *default_shader;
+  Texture *brick_texture;
   Mesh *triangle_mesh;
 };

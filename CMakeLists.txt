@@ -16,6 +16,7 @@ add_executable(${PROJECT_NAME} ${SOURCES} ${GLAD_SOURCE})
 target_include_directories(${PROJECT_NAME} PRIVATE
   ${PROJECT_SOURCE_DIR}/external/glad/include
   ${PROJECT_SOURCE_DIR}/external/glm
+  ${PROJECT_SOURCE_DIR}/external/stb
   ${PROJECT_SOURCE_DIR}/include
 )
 

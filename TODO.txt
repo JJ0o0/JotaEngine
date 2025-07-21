@@ -1,0 +1,6 @@
+TODO:
+
+[X] Texturas
+[ ] Transformações
+[ ] Camera
+[ ] Iluminação
