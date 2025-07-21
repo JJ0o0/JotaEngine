@@ -49,6 +49,8 @@ bool Window::Init() {
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
   glfwSetKeyCallback(window, InputManager::KeyCallback);
 
+  glEnable(GL_DEPTH_TEST);
+
   lastFrameTime = static_cast<float>(glfwGetTime());
 
   std::cout << "Bem vindo a JotaEngine!\n";
@@ -84,6 +86,18 @@ void Window::SetShouldClose(bool value) {
 
 bool Window::ShouldClose() const { return glfwWindowShouldClose(window); }
 
+// EU AMO C++
+// Ele já converte height para float :D
+// Mas, pra deixar mais facil de ler, vou usar static_cast pros dois.
+float Window::GetAspectRatio() const {
+  int w, h;
+  glfwGetFramebufferSize(window, &w, &h);
+
+  return static_cast<float>(w) / static_cast<float>(h);
+}
+
+// NÃO ME PERGUNTE COMO ISSO FOI FEITO
+// Pergunta pro gpt :D
 std::string Window::GetSystemName() {
   char buffer[128];
   std::string result = "";

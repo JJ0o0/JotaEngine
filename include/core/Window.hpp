@@ -21,6 +21,8 @@ public:
   void SetShouldClose(bool value);
   bool ShouldClose() const;
 
+  float GetAspectRatio() const;
+
   std::string GetSystemName();
 
   GLFWwindow *GetNative() const;

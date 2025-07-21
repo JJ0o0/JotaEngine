@@ -2,6 +2,7 @@ TODO:
 
 [X] Texturas
 [X] Classe GameObject
-[ ] Transformações
+[X] Transformações
+[ ] Resource Manager
 [ ] Camera
 [ ] Iluminação
