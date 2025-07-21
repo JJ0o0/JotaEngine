@@ -1,7 +1,7 @@
 #include "core/Game.hpp"
 #include "engine/InputManager.hpp"
 
-Game::Game() : default_shader(nullptr), triangle_mesh(nullptr) {}
+Game::Game() : square_obj(nullptr), default_shader(nullptr) {}
 Game::~Game() {}
 
 void Game::Start() {
@@ -15,9 +15,14 @@ void Game::Start() {
 
   std::vector<unsigned int> indices = {0, 1, 2, 2, 3, 0};
 
-  brick_texture = new Texture("assets/textures/brick_albedo.jpg");
+  brick_texture = std::make_shared<Texture>("assets/textures/brick_albedo.jpg");
+  square_mesh = std::make_shared<Mesh>(vertices, indices);
+
+  square_obj = new GameObject();
+  square_obj->SetMesh(square_mesh);
+  square_obj->SetTexture(brick_texture);
+
   default_shader = new Shader("shaders/default.vert", "shaders/default.frag");
-  triangle_mesh = new Mesh(vertices, indices);
 }
 
 void Game::Update(float dt) {}
@@ -28,14 +33,9 @@ void Game::Input(Window &window) {
   }
 }
 
-void Game::Render() {
-  default_shader->Bind();
-  brick_texture->Bind();
-  triangle_mesh->Render();
-  default_shader->Unbind();
-}
+void Game::Render() { square_obj->Render(*default_shader); }
 
 void Game::Quit() {
-  delete triangle_mesh;
+  delete square_obj;
   delete default_shader;
 }

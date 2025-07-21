@@ -1,9 +1,7 @@
 #pragma once
 
 #include "core/Window.hpp"
-#include "core/Shader.hpp"
-#include "core/Mesh.hpp"
-#include "core/Texture.hpp"
+#include "engine/GameObject.hpp"
 
 class Game {
 public:
@@ -17,7 +15,9 @@ public:
   void Quit();
 
 private:
+  std::shared_ptr<Mesh> square_mesh;
+  std::shared_ptr<Texture> brick_texture;
+
   Shader *default_shader;
-  Texture *brick_texture;
-  Mesh *triangle_mesh;
+  GameObject *square_obj;
 };
