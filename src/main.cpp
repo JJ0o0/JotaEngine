@@ -2,7 +2,7 @@
 #include "core/Game.hpp"
 
 int main() {
-  Window window(800, 800, "JotaEngine");
+  Window window(1280, 720, "JotaEngine");
   if (!window.Init()) {
     return -1;
   }
