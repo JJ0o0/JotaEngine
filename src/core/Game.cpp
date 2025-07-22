@@ -1,52 +1,82 @@
 #include "core/Game.hpp"
 #include "engine/InputManager.hpp"
+#include "engine/MeshCreator.hpp"
+#include "engine/ObjectManager.hpp"
 #include "engine/ResourceManager.hpp"
 
-#include "glm/ext/matrix_clip_space.hpp"
-#include "glm/ext/matrix_transform.hpp"
-
-Game::Game() = default;
+Game::Game(Window &game_wnd) : game_window(game_wnd) {};
 Game::~Game() = default;
 
 void Game::Start() {
-  // Se tiver estranho os vectors, é porque o LazyVim fez a autoformatação do
-  // jeito dele...
-  // Tipo agora no comentario de cima ^
-  std::vector<Vertex> vertices = {Vertex({-0.5f, 0.5f, 0.0f}, {0, 1}),
-                                  Vertex({0.5f, 0.5f, 0.0f}, {1, 1}),
-                                  Vertex({0.5f, -0.5f, 0.0f}, {1, 0}),
-                                  Vertex({-0.5f, -0.5f, 0.0f}, {0, 0})};
+  std::vector<glm::vec3> cubePositions = {
+      glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
+      glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
+      glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
+      glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
+      glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
 
-  std::vector<unsigned int> indices = {0, 1, 2, 2, 3, 0};
+  for (int i = 0; i < cubePositions.size(); i++) {
+    auto obj = std::make_shared<GameObject>("Cube" + std::to_string(i));
+    obj->SetMesh(ResourceManager::LoadMesh("Cube", MeshCreator::CreateCube()));
 
-  square_obj = std::make_unique<GameObject>();
-  square_obj->SetMesh(ResourceManager::LoadMesh("Plane", vertices, indices));
-  square_obj->SetTexture(ResourceManager::LoadTexture(
-      "BrickAlbedo", "assets/textures/brick_albedo.jpg"));
+    if (i % 2) {
+      obj->SetTexture(ResourceManager::LoadTexture(
+          "Brick", "assets/textures/bricks/brick_albedo.jpg"));
+    } else {
+      obj->SetTexture(ResourceManager::LoadTexture(
+          "Wood", "assets/textures/wood/wood_albedo.jpg"));
+    }
+
+    obj->transform.SetPosition(cubePositions.at(i));
+
+    float angle = 20.0f * i;
+    obj->transform.SetRotation(glm::vec3(angle, angle * 0.3f, angle * 0.5f));
+
+    ObjectManager::Add(obj);
+  }
 
   default_shader = ResourceManager::LoadShader(
       "Default", "shaders/default.vert", "shaders/default.frag");
 }
 
 void Game::Update(float dt) {
-  glm::mat4 view = glm::mat4(1.0f);
-  view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+  ObjectManager::Update(dt);
 
-  glm::mat4 projection;
-  projection =
-      glm::perspective(glm::radians(45.0f), 800.0f / 800.0f, 0.1f, 100.0f);
-
-  default_shader->Bind();
-  default_shader->SetMatrix4("view", view);
-  default_shader->SetMatrix4("projection", projection);
-}
-
-void Game::Input(Window &window) {
-  if (InputManager::IsKeyPressedOnce(GLFW_KEY_ESCAPE)) {
-    window.SetShouldClose(true);
+  if (game_window.IsCursorLocked()) {
+    camera.KeyboardMovement(dt);
   }
 }
 
-void Game::Render() { square_obj->Render(*default_shader); }
+void Game::Input() {
+  if (InputManager::IsKeyPressedOnce(GLFW_KEY_ESCAPE)) {
+    if (game_window.IsCursorLocked()) {
+      game_window.LockCursor(false);
+    } else {
+      game_window.SetShouldClose(true);
+    }
+  }
+
+  if (InputManager::IsMouseLeftPressed() and !game_window.IsCursorLocked()) {
+    game_window.LockCursor(true);
+  }
+
+  if (game_window.IsCursorLocked()) {
+    camera.MouseMovement();
+  }
+
+  InputManager::Update();
+}
+
+void Game::Render() {
+  default_shader->Bind();
+
+  camera.UpdateCameraVectors();
+
+  default_shader->SetMatrix4("view", camera.GetViewMatrix());
+  default_shader->SetMatrix4(
+      "projection", camera.GetProjectionMatrix(game_window.GetAspectRatio()));
+
+  ObjectManager::Render(*default_shader);
+}
 
 void Game::Quit() { ResourceManager::Clear(); }

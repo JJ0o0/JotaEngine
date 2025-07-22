@@ -38,6 +38,19 @@ ResourceManager::LoadMesh(const std::string &name,
   return m;
 }
 
+std::shared_ptr<Mesh> ResourceManager::LoadMesh(const std::string &name,
+                                                std::shared_ptr<Mesh> mesh) {
+  auto i = meshes.find(name);
+
+  if (i != meshes.end()) {
+    return i->second;
+  }
+
+  meshes[name] = mesh;
+
+  return mesh;
+}
+
 std::shared_ptr<Texture> ResourceManager::LoadTexture(const std::string &name,
                                                       const std::string &path) {
   auto i = textures.find(name);

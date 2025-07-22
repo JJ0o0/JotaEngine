@@ -1,8 +1,11 @@
 TODO:
 
+- BÁSICO:
 [X] Texturas
 [X] Classe GameObject
 [X] Transformações
 [X] Resource Manager
-[ ] Camera
-[ ] Iluminação
+[X] Object Manager
+[X] Camera
+
+- ILUMINAÇÃO:

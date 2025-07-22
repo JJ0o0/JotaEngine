@@ -48,6 +48,9 @@ bool Window::Init() {
 
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
   glfwSetKeyCallback(window, InputManager::KeyCallback);
+  glfwSetCursorPosCallback(window, InputManager::CursorPosCallback);
+
+  LockCursor(true);
 
   glEnable(GL_DEPTH_TEST);
 
@@ -79,6 +82,20 @@ float Window::GetDeltaTime() {
 void Window::SwapBuffers() const { glfwSwapBuffers(window); }
 
 void Window::PollEvents() const { glfwPollEvents(); }
+
+void Window::LockCursor(bool enable) {
+  int mode = GLFW_CURSOR_DISABLED;
+
+  if (!enable) {
+    mode = GLFW_CURSOR_NORMAL;
+  }
+
+  glfwSetInputMode(window, GLFW_CURSOR, mode);
+}
+
+bool Window::IsCursorLocked() const {
+  return glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED;
+}
 
 void Window::SetShouldClose(bool value) {
   glfwSetWindowShouldClose(window, value);

@@ -7,13 +7,13 @@ int main() {
     return -1;
   }
 
-  Game game;
+  Game game(window);
   game.Start();
 
   while (!window.ShouldClose()) {
     float deltatime = window.GetDeltaTime();
 
-    game.Input(window);
+    game.Input();
     game.Update(deltatime);
 
     glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
@@ -25,8 +25,8 @@ int main() {
     window.PollEvents();
   }
 
-  window.Terminate();
   game.Quit();
+  window.Terminate();
 
   return 0;
 }

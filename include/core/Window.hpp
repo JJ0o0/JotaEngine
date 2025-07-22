@@ -18,6 +18,9 @@ public:
   void SwapBuffers() const;
   void PollEvents() const;
 
+  void LockCursor(bool enable);
+  bool IsCursorLocked() const;
+
   void SetShouldClose(bool value);
   bool ShouldClose() const;
 

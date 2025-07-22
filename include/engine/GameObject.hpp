@@ -9,10 +9,14 @@
 
 class GameObject {
 public:
-  GameObject();
+  GameObject(const std::string &name = "GameObject");
   ~GameObject();
 
-  void Render(Shader &shader) const;
+  const std::string &GetName() const;
+  void SetName(const std::string &newName);
+
+  virtual void Render(Shader &shader);
+  virtual void Update(float dt);
 
   Transform transform;
 
@@ -23,6 +27,8 @@ public:
   std::shared_ptr<Texture> GetTexture() const;
 
 private:
+  std::string name;
+
   std::shared_ptr<Mesh> mesh;
   std::shared_ptr<Texture> texture;
 };

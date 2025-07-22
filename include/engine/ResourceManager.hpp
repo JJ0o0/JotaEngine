@@ -17,6 +17,8 @@ public:
   static std::shared_ptr<Mesh>
   LoadMesh(const std::string &name, const std::vector<Vertex> &vertices,
            const std::vector<unsigned int> &indices);
+  static std::shared_ptr<Mesh> LoadMesh(const std::string &name,
+                                        std::shared_ptr<Mesh> mesh);
   static std::shared_ptr<Texture> LoadTexture(const std::string &name,
                                               const std::string &path);
 
