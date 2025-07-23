@@ -8,32 +8,22 @@ Game::Game(Window &game_wnd) : game_window(game_wnd) {};
 Game::~Game() = default;
 
 void Game::Start() {
-  std::vector<glm::vec3> cubePositions = {
-      glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
-      glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
-      glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
-      glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
-      glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
+  auto obj = std::make_shared<GameObject>("Cube");
+  obj->SetMesh(ResourceManager::LoadMesh("Cube", MeshCreator::CreateCube()));
 
-  for (int i = 0; i < cubePositions.size(); i++) {
-    auto obj = std::make_shared<GameObject>("Cube" + std::to_string(i));
-    obj->SetMesh(ResourceManager::LoadMesh("Cube", MeshCreator::CreateCube()));
+  auto ambient = ResourceManager::LoadTexture(
+      "container_albedo",
+      "assets/textures/learnopengl-container/container2.png");
+  auto specular = ResourceManager::LoadTexture(
+      "container_specular",
+      "assets/textures/learnopengl-container/container2_specular.png");
 
-    if (i % 2) {
-      obj->SetTexture(ResourceManager::LoadTexture(
-          "Brick", "assets/textures/bricks/brick_albedo.jpg"));
-    } else {
-      obj->SetTexture(ResourceManager::LoadTexture(
-          "Wood", "assets/textures/wood/wood_albedo.jpg"));
-    }
+  auto material = ResourceManager::LoadMaterial(
+      "container_material", "container_albedo", "container_specular", 32.0f);
 
-    obj->transform.SetPosition(cubePositions.at(i));
+  obj->SetMaterial(material);
 
-    float angle = 20.0f * i;
-    obj->transform.SetRotation(glm::vec3(angle, angle * 0.3f, angle * 0.5f));
-
-    ObjectManager::Add(obj);
-  }
+  ObjectManager::Add(obj);
 
   default_shader = ResourceManager::LoadShader(
       "Default", "shaders/default.vert", "shaders/default.frag");
@@ -75,6 +65,23 @@ void Game::Render() {
   default_shader->SetMatrix4("view", camera.GetViewMatrix());
   default_shader->SetMatrix4(
       "projection", camera.GetProjectionMatrix(game_window.GetAspectRatio()));
+
+  default_shader->SetVec3("viewPos", camera.GetPosition());
+
+  // o cara que fez as docs do learnopengl tava bricando com isso...
+  // então eu também quero brincar.
+  glm::vec3 lightColor;
+  lightColor.x = sin(glfwGetTime() * 2.0f);
+  lightColor.y = sin(glfwGetTime() * 0.7f);
+  lightColor.z = sin(glfwGetTime() * 1.3f);
+
+  glm::vec3 diffuse = lightColor * glm::vec3(0.5f);
+  glm::vec3 ambient = lightColor * glm::vec3(0.2f);
+
+  default_shader->SetVec3("light.ambient", ambient);
+  default_shader->SetVec3("light.diffuse", diffuse);
+  default_shader->SetVec3("light.specular", glm::vec3(1.0f));
+  default_shader->SetVec3("light.position", glm::vec3(1.2f, 1.0f, 2.0f));
 
   ObjectManager::Render(*default_shader);
 }

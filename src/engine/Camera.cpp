@@ -23,7 +23,14 @@ void Camera::UpdateCameraVectors() {
 }
 
 void Camera::KeyboardMovement(float delta) {
-  float speed = 2.5f;
+  float speed;
+
+  if (InputManager::IsKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
+    speed = 5.0f;
+  } else {
+    speed = 2.5f;
+  }
+
   float velocity = speed * delta;
 
   if (InputManager::IsKeyPressed(GLFW_KEY_W)) {
@@ -65,6 +72,8 @@ void Camera::MouseMovement() {
 
   UpdateCameraVectors();
 }
+
+glm::vec3 Camera::GetPosition() const { return position; }
 
 glm::mat4 Camera::GetViewMatrix() const {
   return glm::lookAt(position, position + front, up);

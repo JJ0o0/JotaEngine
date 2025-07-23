@@ -1,10 +1,13 @@
 #include "engine/ResourceManager.hpp"
+#include <iostream>
 
 std::unordered_map<std::string, std::shared_ptr<Shader>>
     ResourceManager::shaders;
 std::unordered_map<std::string, std::shared_ptr<Mesh>> ResourceManager::meshes;
 std::unordered_map<std::string, std::shared_ptr<Texture>>
     ResourceManager::textures;
+std::unordered_map<std::string, std::shared_ptr<Material>>
+    ResourceManager::materials;
 
 std::shared_ptr<Shader>
 ResourceManager::LoadShader(const std::string &name,
@@ -65,6 +68,29 @@ std::shared_ptr<Texture> ResourceManager::LoadTexture(const std::string &name,
   return t;
 }
 
+std::shared_ptr<Material> ResourceManager::LoadMaterial(
+    const std::string &name, const std::string &diffuseName,
+    const std::string &specularName, float shininess) {
+  auto it = materials.find(name);
+  if (it != materials.end()) {
+    return it->second;
+  }
+
+  auto diffuse = GetTexture(diffuseName);
+  auto specular = GetTexture(specularName);
+
+  if (!diffuse || !specular) {
+    std::cerr << "[ResourceManager] Erro ao carregar material '" << name
+              << "': uma das texturas não foi encontrada.\n";
+    return nullptr;
+  }
+
+  auto mat = std::make_shared<Material>(diffuse, specular, shininess);
+  materials[name] = mat;
+
+  return mat;
+}
+
 std::shared_ptr<Shader> ResourceManager::GetShader(const std::string &name) {
   auto i = shaders.find(name);
 
@@ -95,6 +121,16 @@ std::shared_ptr<Texture> ResourceManager::GetTexture(const std::string &name) {
   return nullptr;
 }
 
+std::shared_ptr<Material>
+ResourceManager::GetMaterial(const std::string &name) {
+  auto it = materials.find(name);
+  if (it != materials.end()) {
+    return it->second;
+  }
+
+  return nullptr;
+}
+
 void ResourceManager::UnloadShader(const std::string &name) {
   auto i = shaders.find(name);
 
@@ -119,8 +155,16 @@ void ResourceManager::UnloadTexture(const std::string &name) {
   }
 }
 
+void ResourceManager::UnloadMaterial(const std::string &name) {
+  auto it = materials.find(name);
+  if (it != materials.end()) {
+    materials.erase(it);
+  }
+}
+
 void ResourceManager::Clear() {
   shaders.clear();
   meshes.clear();
   textures.clear();
+  materials.clear();
 }

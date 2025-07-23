@@ -11,6 +11,8 @@ public:
   void KeyboardMovement(float delta);
   void MouseMovement();
 
+  glm::vec3 GetPosition() const;
+
   glm::mat4 GetViewMatrix() const;
   glm::mat4 GetProjectionMatrix(float aspectRatio) const;
 
