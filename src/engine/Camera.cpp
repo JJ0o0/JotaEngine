@@ -75,6 +75,8 @@ void Camera::MouseMovement() {
 
 glm::vec3 Camera::GetPosition() const { return position; }
 
+glm::vec3 Camera::GetFront() const { return front; }
+
 glm::mat4 Camera::GetViewMatrix() const {
   return glm::lookAt(position, position + front, up);
 }

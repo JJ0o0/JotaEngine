@@ -9,3 +9,5 @@ TODO:
 [X] Camera
 
 - ILUMINAÇÃO:
+[X] Phong
+[ ] Classe de Iluminação
