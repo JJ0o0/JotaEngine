@@ -2,7 +2,6 @@
 
 #include "engine/InputManager.hpp"
 #include "engine/Light.hpp"
-#include "engine/MeshCreator.hpp"
 #include "engine/ObjectManager.hpp"
 #include "engine/ResourceManager.hpp"
 #include "engine/LightManager.hpp"
@@ -10,7 +9,6 @@
 #include "glm/fwd.hpp"
 
 #include <string>
-#include <vector>
 
 Game::Game(Window &game_wnd) : game_window(game_wnd) {};
 Game::~Game() = default;
@@ -34,63 +32,23 @@ void Game::StartLights() {
   glm::vec3 directionalDirection = glm::vec3(-0.2f, -1.0f, -0.3f);
   DirectionalLight directional(base, directionalDirection);
 
-  glm::vec3 pointAmbient = glm::vec3(0.5f);
-  glm::vec3 pointDiffuse = glm::vec3(0.75f);
-  glm::vec3 pointSpecular = glm::vec3(1.0f);
-  BaseLight pointBase(pointAmbient, pointDiffuse, pointSpecular);
-
-  std::vector<glm::vec3> pointPositions = {
-      glm::vec3(0.7f, 0.2f, 2.0f), glm::vec3(2.3f, -3.3f, -4.0f),
-      glm::vec3(-4.0f, 2.0f, -12.0f), glm::vec3(0.0f, 0.0f, -3.0f)};
-
-  float pointRange = 20.0f;
-  for (const auto &pos : pointPositions) {
-    PointLight light(pointBase, pos, pointRange);
-    lights.CreatePointLight(light);
-  }
+  PointLight point(base, glm::vec3(1.0f, 1.0f, 1.0f), 20);
 
   lights.CreateDirectionalLight(directional);
+  lights.CreatePointLight(point);
 }
 
-void Game::StartTextures() {
-  ResourceManager::LoadTexture(
-      "container_albedo",
-      "assets/textures/learnopengl-container/container2.png");
+void Game::StartTextures() {}
 
-  ResourceManager::LoadTexture(
-      "container_specular",
-      "assets/textures/learnopengl-container/container2_specular.png");
-}
-
-void Game::StartMaterials() {
-  ResourceManager::LoadMaterial("container_material", "container_albedo",
-                                "container_specular", 32.0f);
-}
+void Game::StartMaterials() {}
 
 void Game::StartObjects() {
-  std::vector<glm::vec3> cubePositions = {
-      glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
-      glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
-      glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
-      glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
-      glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
+  auto obj = std::make_shared<GameObject>();
+  auto model = ResourceManager::LoadModel(
+      "backpack_model", "assets/models/backpack/backpack.obj");
+  obj->SetModel(model);
 
-  auto mat = ResourceManager::GetMaterial("container_material");
-  for (size_t i = 0; i < cubePositions.size(); i++) {
-    auto obj = std::make_shared<GameObject>();
-
-    std::string meshName = "Cube" + std::to_string(i);
-    auto mesh = ResourceManager::LoadMesh(meshName, MeshCreator::CreateCube());
-    obj->SetMesh(mesh);
-
-    obj->SetMaterial(mat);
-
-    float angle = 20.0f * i;
-    obj->transform.SetPosition(cubePositions[i]);
-    obj->transform.SetRotation(glm::vec3(angle, angle / 0.3f, angle / 0.5f));
-
-    ObjectManager::Add(obj);
-  }
+  ObjectManager::Add(obj);
 }
 
 void Game::StartShaders() {

@@ -1,4 +1,5 @@
 #include "engine/ResourceManager.hpp"
+#include "engine/MeshCreator.hpp"
 #include <iostream>
 
 std::unordered_map<std::string, std::shared_ptr<Shader>>
@@ -8,6 +9,7 @@ std::unordered_map<std::string, std::shared_ptr<Texture>>
     ResourceManager::textures;
 std::unordered_map<std::string, std::shared_ptr<Material>>
     ResourceManager::materials;
+std::unordered_map<std::string, std::shared_ptr<Model>> ResourceManager::models;
 
 std::shared_ptr<Shader>
 ResourceManager::LoadShader(const std::string &name,
@@ -91,6 +93,62 @@ std::shared_ptr<Material> ResourceManager::LoadMaterial(
   return mat;
 }
 
+std::shared_ptr<Material> ResourceManager::LoadMaterial(
+    const std::string &name, std::shared_ptr<Texture> diffuse,
+    std::shared_ptr<Texture> specular, float shininess) {
+  auto it = materials.find(name);
+  if (it != materials.end()) {
+    return it->second;
+  }
+
+  if (!diffuse || !specular) {
+    std::cerr << "[ResourceManager] Erro ao carregar material '" << name
+              << "': uma das texturas não foi encontrada.\n";
+    return nullptr;
+  }
+
+  auto mat = std::make_shared<Material>(diffuse, specular, shininess);
+  materials[name] = mat;
+
+  return mat;
+}
+
+std::shared_ptr<Material>
+ResourceManager::LoadMaterial(const std::string &name,
+                              const glm::vec3 &diffuseColor,
+                              const glm::vec3 &specularColor, float shininess) {
+  auto it = materials.find(name);
+  if (it != materials.end()) {
+    return it->second;
+  }
+
+  auto mat = std::make_shared<Material>(diffuseColor, specularColor, shininess);
+  materials[name] = mat;
+
+  return mat;
+}
+
+std::shared_ptr<Model> ResourceManager::LoadModel(const std::string &name,
+                                                  const std::string &path) {
+  auto it = models.find(name);
+  if (it != models.end()) {
+    return it->second;
+  }
+
+  auto model = MeshCreator::LoadModel(path);
+
+  if (!model) {
+    std::cerr << "[ResourceManager] Erro ao carregar model: " << path
+              << std::endl;
+
+    return nullptr;
+  }
+
+  models[name] = model;
+
+  return model;
+}
+
 std::shared_ptr<Shader> ResourceManager::GetShader(const std::string &name) {
   auto i = shaders.find(name);
 
@@ -131,6 +189,15 @@ ResourceManager::GetMaterial(const std::string &name) {
   return nullptr;
 }
 
+std::shared_ptr<Model> ResourceManager::GetModel(const std::string &name) {
+  auto it = models.find(name);
+  if (it != models.end()) {
+    return it->second;
+  }
+
+  return nullptr;
+}
+
 void ResourceManager::UnloadShader(const std::string &name) {
   auto i = shaders.find(name);
 
@@ -162,9 +229,17 @@ void ResourceManager::UnloadMaterial(const std::string &name) {
   }
 }
 
+void ResourceManager::UnloadModel(const std::string &name) {
+  auto it = models.find(name);
+  if (it != models.end()) {
+    models.erase(it);
+  }
+}
+
 void ResourceManager::Clear() {
   shaders.clear();
   meshes.clear();
   textures.clear();
   materials.clear();
+  models.clear();
 }

@@ -13,5 +13,5 @@ TODO:
 [X] Classe de Iluminação
 
 - MODELOS 3D:
-[ ] Carregamento com Assimp
-[ ] Passando Materials
+[X] Carregamento com Assimp
+[X] Passando Materials

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/Mesh.hpp"
+#include "engine/Model.hpp"
 #include "engine/Material.hpp"
 #include "core/Shader.hpp"
 
@@ -25,16 +25,28 @@ public:
                                                 const std::string &diffusePath,
                                                 const std::string &specularPath,
                                                 float shininess);
+  static std::shared_ptr<Material> LoadMaterial(const std::string &name,
+                                                const glm::vec3 &diffuseColor,
+                                                const glm::vec3 &specularColor,
+                                                float shininess);
+  static std::shared_ptr<Material>
+  LoadMaterial(const std::string &name, std::shared_ptr<Texture> diffuse,
+               std::shared_ptr<Texture> specular, float shininess);
+
+  static std::shared_ptr<Model> LoadModel(const std::string &name,
+                                          const std::string &path);
 
   static std::shared_ptr<Shader> GetShader(const std::string &name);
   static std::shared_ptr<Mesh> GetMesh(const std::string &name);
   static std::shared_ptr<Texture> GetTexture(const std::string &name);
   static std::shared_ptr<Material> GetMaterial(const std::string &name);
+  static std::shared_ptr<Model> GetModel(const std::string &name);
 
   static void UnloadShader(const std::string &name);
   static void UnloadMesh(const std::string &name);
   static void UnloadTexture(const std::string &name);
   static void UnloadMaterial(const std::string &name);
+  static void UnloadModel(const std::string &name);
 
   static void Clear();
 
@@ -45,4 +57,5 @@ private:
   static std::unordered_map<std::string, std::shared_ptr<Mesh>> meshes;
   static std::unordered_map<std::string, std::shared_ptr<Texture>> textures;
   static std::unordered_map<std::string, std::shared_ptr<Material>> materials;
+  static std::unordered_map<std::string, std::shared_ptr<Model>> models;
 };

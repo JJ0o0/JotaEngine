@@ -3,8 +3,7 @@
 #include <memory>
 
 #include "core/Shader.hpp"
-#include "core/Mesh.hpp"
-#include "engine/Material.hpp"
+#include "engine/Model.hpp"
 #include "engine/Transform.hpp"
 
 class GameObject {
@@ -20,15 +19,12 @@ public:
 
   Transform transform;
 
-  void SetMesh(std::shared_ptr<Mesh> mesh);
-  void SetMaterial(std::shared_ptr<Material> material);
+  void SetModel(std::shared_ptr<Model> model);
 
-  std::shared_ptr<Mesh> GetMesh() const;
-  std::shared_ptr<Material> GetMaterial() const;
+  std::shared_ptr<Model> GetModel() const;
 
 private:
   std::string name;
 
-  std::shared_ptr<Mesh> mesh;
-  std::shared_ptr<Material> material;
+  std::shared_ptr<Model> model;
 };

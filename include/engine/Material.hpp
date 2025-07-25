@@ -7,20 +7,36 @@
 #include <glm/glm.hpp>
 
 struct Material {
-  std::shared_ptr<Texture> Diffuse;
-  std::shared_ptr<Texture> Specular;
+  std::shared_ptr<Texture> DiffuseTexture;
+  std::shared_ptr<Texture> SpecularTexture;
+
+  glm::vec3 DiffuseColor;
+  glm::vec3 SpecularColor;
+
   float Shininess;
+  bool UseTexture;
 
   Material(std::shared_ptr<Texture> d, std::shared_ptr<Texture> s, float shi)
-      : Diffuse(d), Specular(s), Shininess(shi) {}
+      : DiffuseTexture(d), SpecularTexture(s), DiffuseColor(0.0f),
+        SpecularColor(0.0f), Shininess(shi), UseTexture(true) {}
+
+  Material(const glm::vec3 &d, const glm::vec3 &s, float shi)
+      : DiffuseColor(d), SpecularColor(s), DiffuseTexture(nullptr),
+        SpecularTexture(nullptr), Shininess(shi), UseTexture(false) {}
 
   void ApplyToShader(const Shader &shader) {
-    Diffuse->Bind(0);
-    shader.SetInt("material.diffuse", 0);
-
-    Specular->Bind(1);
-    shader.SetInt("material.specular", 1);
-
     shader.SetFloat("material.shininess", Shininess);
+    shader.SetInt("material.useTexture", int(UseTexture));
+
+    if (!UseTexture) {
+      shader.SetVec3("material.diffuseColor", DiffuseColor);
+      shader.SetVec3("material.specularColor", SpecularColor);
+    } else {
+      DiffuseTexture->Bind(0);
+      shader.SetInt("material.diffuse", 0);
+
+      SpecularTexture->Bind(1);
+      shader.SetInt("material.specular", 1);
+    }
   }
 };
