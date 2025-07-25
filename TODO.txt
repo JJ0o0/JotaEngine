@@ -10,4 +10,8 @@ TODO:
 
 - ILUMINAÇÃO:
 [X] Phong
-[ ] Classe de Iluminação
+[X] Classe de Iluminação
+
+- MODELOS 3D:
+[ ] Carregamento com Assimp
+[ ] Passando Materials

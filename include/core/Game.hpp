@@ -17,6 +17,12 @@ public:
   void Render();
   void Quit();
 
+  void StartLights();
+  void StartTextures();
+  void StartMaterials();
+  void StartObjects();
+  void StartShaders();
+
 private:
   Window &game_window;
 
