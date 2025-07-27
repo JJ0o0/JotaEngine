@@ -149,6 +149,24 @@ std::shared_ptr<Model> ResourceManager::LoadModel(const std::string &name,
   return model;
 }
 
+std::shared_ptr<Model>
+ResourceManager::LoadModel(const std::string &name, std::shared_ptr<Mesh> mesh,
+                           std::shared_ptr<Material> material) {
+  auto it = models.find(name);
+  if (it != models.end()) {
+    return it->second;
+  }
+
+  auto model = std::make_shared<Model>();
+
+  model->AddMesh(mesh);
+  model->AddMaterial(material);
+
+  models[name] = model;
+
+  return model;
+}
+
 std::shared_ptr<Shader> ResourceManager::GetShader(const std::string &name) {
   auto i = shaders.find(name);
 

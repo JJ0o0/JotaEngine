@@ -1,10 +1,15 @@
 #include "core/Game.hpp"
 
+#include "engine/GameObject.hpp"
+#include "engine/GameObjectifier.hpp"
 #include "engine/InputManager.hpp"
 #include "engine/Light.hpp"
 #include "engine/ObjectManager.hpp"
+#include "engine/MeshCreator.hpp"
 #include "engine/ResourceManager.hpp"
 #include "engine/LightManager.hpp"
+
+#include "objects/rotating_object.hpp"
 
 #include "glm/fwd.hpp"
 
@@ -40,15 +45,44 @@ void Game::StartLights() {
 
 void Game::StartTextures() {}
 
-void Game::StartMaterials() {}
+void Game::StartMaterials() {
+  ResourceManager::LoadMaterial("ground_material", glm::vec3(0.8f),
+                                glm::vec3(1.0f), 16.0f);
+
+  ResourceManager::LoadMaterial("cube_material", glm::vec3(0.75f, 0.0f, 0.25f),
+                                glm::vec3(0.3f), 32.0f);
+}
 
 void Game::StartObjects() {
-  auto obj = std::make_shared<GameObject>();
-  auto model = ResourceManager::LoadModel(
-      "backpack_model", "assets/models/backpack/backpack.obj");
-  obj->SetModel(model);
+  ResourceManager::LoadMesh("ground_mesh", MeshCreator::CreatePlane());
+  ResourceManager::LoadMesh("cube_mesh", MeshCreator::CreateCube());
+
+  auto obj = GameObjectifier::MakeObject<GameObject>("ground", "ground_mesh",
+                                                     "ground_material");
+  auto cubeObj = GameObjectifier::MakeObject<GameObject>("cube", "cube_mesh",
+                                                         "cube_material");
+  auto loadedObj = GameObjectifier::MakeObject<GameObject>(
+      "loaded", "assets/models/monkey.glb");
+  auto loadedTexturedObj = GameObjectifier::MakeObject<RotatingObject>(
+      "loaded_textured", "assets/models/backpack/backpack.obj");
+
+  obj->transform.SetPosition(glm::vec3(0.0f, -5.0f, 0.0f));
+  obj->transform.SetRotation(glm::vec3(90.0f, 0.0f, 0.0f));
+  obj->transform.SetScale(glm::vec3(10.0f));
+
+  cubeObj->transform.SetPosition(glm::vec3(3.5f, -4.5f, 1.0f));
+  cubeObj->transform.SetRotation(glm::vec3(0.0f, 25.0f, 0.0f));
+
+  loadedObj->transform.SetPosition(glm::vec3(0.0f, -4.0f, -3.0f));
+  loadedObj->transform.SetScale(glm::vec3(1.5f, 0.5f, 1.0f));
+
+  loadedTexturedObj->transform.SetPosition(glm::vec3(0.0f, -3.5f, 2.0f));
+  loadedTexturedObj->transform.SetScale(glm::vec3(0.5f));
 
   ObjectManager::Add(obj);
+  ObjectManager::Add(cubeObj);
+  ObjectManager::Add(loadedObj);
+  ObjectManager::Add(loadedTexturedObj);
 }
 
 void Game::StartShaders() {

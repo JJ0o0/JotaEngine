@@ -35,6 +35,9 @@ public:
 
   static std::shared_ptr<Model> LoadModel(const std::string &name,
                                           const std::string &path);
+  static std::shared_ptr<Model> LoadModel(const std::string &name,
+                                          std::shared_ptr<Mesh> mesh,
+                                          std::shared_ptr<Material> material);
 
   static std::shared_ptr<Shader> GetShader(const std::string &name);
   static std::shared_ptr<Mesh> GetMesh(const std::string &name);
