@@ -23,6 +23,7 @@ std::vector<SpotLight> &LightManager::GetSpotLights() { return spotLights; }
 std::vector<PointLight> &LightManager::GetPointLights() { return pointLights; }
 
 void LightManager::SendToShader(Shader &shader) const {
+  shader.Bind();
   shader.SetInt("pointLightsQuantity", pointLights.size());
   shader.SetInt("spotLightsQuantity", spotLights.size());
 
@@ -72,6 +73,8 @@ void LightManager::SendToShader(Shader &shader) const {
     shader.SetVec3("directionalLight.diffuse", glm::vec3(0.0f));
     shader.SetVec3("directionalLight.specular", glm::vec3(0.0f));
   }
+
+  shader.Unbind();
 }
 
 void LightManager::Clear() {

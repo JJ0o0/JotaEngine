@@ -13,7 +13,7 @@ public:
   static std::shared_ptr<GameObject> Get(const std::string &name);
 
   static void Update(float deltaTime);
-  static void Render(Shader &shader);
+  static void Render(Camera &camera, float aspectRatio);
 
 private:
   static std::vector<std::shared_ptr<GameObject>> objects;

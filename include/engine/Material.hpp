@@ -25,6 +25,10 @@ struct Material {
         SpecularTexture(nullptr), Shininess(shi), UseTexture(false) {}
 
   void ApplyToShader(const Shader &shader) {
+    if (shader.GetUniformLocation("material.useTexture", true) == -1) {
+      return;
+    }
+
     shader.SetFloat("material.shininess", Shininess);
     shader.SetInt("material.useTexture", int(UseTexture));
 

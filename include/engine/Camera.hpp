@@ -11,6 +11,8 @@ public:
   void KeyboardMovement(float delta);
   void MouseMovement();
 
+  void SetPosition(const glm::vec3 &pos);
+
   glm::vec3 GetPosition() const;
   glm::vec3 GetFront() const;
 

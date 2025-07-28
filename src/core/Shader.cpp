@@ -45,10 +45,10 @@ void Shader::Bind() const { glUseProgram(ID); }
 
 void Shader::Unbind() const { glUseProgram(0); }
 
-int Shader::GetUniformLocation(const std::string &name) const {
+int Shader::GetUniformLocation(const std::string &name, bool suppress) const {
   int loc = glGetUniformLocation(ID, name.c_str());
 
-  if (loc == -1) {
+  if (loc == -1 && !suppress) {
     std::cerr << "Erro ao pegar uniform: '" << name << "'!\n";
   }
 

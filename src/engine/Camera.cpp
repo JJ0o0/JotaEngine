@@ -73,6 +73,8 @@ void Camera::MouseMovement() {
   UpdateCameraVectors();
 }
 
+void Camera::SetPosition(const glm::vec3 &pos) { position = pos; }
+
 glm::vec3 Camera::GetPosition() const { return position; }
 
 glm::vec3 Camera::GetFront() const { return front; }

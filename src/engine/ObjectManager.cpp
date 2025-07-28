@@ -29,8 +29,8 @@ void ObjectManager::Update(float deltaTime) {
   }
 }
 
-void ObjectManager::Render(Shader &shader) {
+void ObjectManager::Render(Camera &camera, float aspectRatio) {
   for (auto &obj : objects) {
-    obj->Render(shader);
+    obj->Render(camera, aspectRatio);
   }
 }

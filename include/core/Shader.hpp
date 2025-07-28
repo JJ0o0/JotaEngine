@@ -13,7 +13,7 @@ public:
 
   unsigned int GetID() const { return ID; }
 
-  int GetUniformLocation(const std::string &name) const;
+  int GetUniformLocation(const std::string &name, bool suppress = false) const;
 
   void SetInt(const std::string &name, int value) const;
   void SetFloat(const std::string &name, float value) const;
